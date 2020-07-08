@@ -11,6 +11,7 @@ import csv
 import traceback
 
 DATA_FILE_NAME = 'data.csv'
+SUBCATEGORIES = []
 
 def login():
     driver.get('http://109.109.104.10/webshop2/Login.aspx?ReturnUrl=%2fwebshop2%2fVoorraad.aspx#voorcod=22&vrdgrp=20&celcod=ALL___&artgrpcod=ALL___')
@@ -44,7 +45,7 @@ def select_subgroup():
     combobox = driver.find_element_by_id('cbProductgroep')
     combobox_arrow = combobox.find_element_by_css_selector('div.combobox-buttons.trigger')
     combobox_arrow.click()
-    stock_li = driver.find_element_by_id('PP100')
+    stock_li = driver.find_element_by_id('PP240')
     stock_a = stock_li.find_element_by_css_selector('a')
     stock_a.click()
 
@@ -53,7 +54,7 @@ def get_info():
     time.sleep(5)
     all_images_src = []
     while True:
-        time.sleep(1)
+        time.sleep(5)
         new_images = False
         items = driver.find_elements_by_css_selector('.item.layout2.horizontaal ')
         for item in items:
@@ -68,7 +69,6 @@ def get_info():
                 # save_image(image_src, 'img/' + image_name)
         if not new_images:
             break
-        time.sleep(1)
         html = driver.find_element_by_tag_name('html')
         html.send_keys(Keys.PAGE_DOWN)
 
@@ -87,7 +87,7 @@ def get_flower(item, image_src):
         else:
             value = tr.find_element_by_css_selector('td.value').text
         info[label] = value
-    if len(info) < 9:
+    if len(info) < 6:
         return False
     else:
         print(info)
@@ -187,7 +187,7 @@ class Flower:
 
 if __name__ == '__main__':
     options = Options()
-    options.headless = True
+    options.headless = False
     driver = webdriver.Firefox(options=options)
     create_csv_file()
     create_head_csv()
@@ -196,4 +196,3 @@ if __name__ == '__main__':
     action(select_stock)
     # action(select_subgroup)
     action(get_info)
-    driver.close()
