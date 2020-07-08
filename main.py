@@ -188,7 +188,7 @@ class Flower:
 if __name__ == '__main__':
     options = Options()
     options.headless = True
-    driver = webdriver.Firefox(options=options)
+    driver = webdriver.Firefox('geckodriver', options=options)
     create_csv_file()
     create_head_csv()
     action(login)
