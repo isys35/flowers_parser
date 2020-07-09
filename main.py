@@ -53,8 +53,10 @@ def select_subgroup():
 def get_info():
     time.sleep(5)
     all_images_src = []
+    html = driver.find_element_by_tag_name('html')
+    html.send_keys(Keys.PAGE_DOWN)
     while True:
-        time.sleep(5)
+        time.sleep(1)
         new_images = False
         items = driver.find_elements_by_css_selector('.item.layout2.horizontaal ')
         for item in items:
