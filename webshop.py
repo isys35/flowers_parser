@@ -1,7 +1,6 @@
 from selenium import webdriver
 import config
 import time
-import httplib2
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
@@ -62,6 +61,7 @@ def parsing_data():
         aviability_el = tr_element.find_element_by_css_selector('.ucgMainStockDiv')
         pack_el = tr_element.find_element_by_css_selector('div.colEmb')
         name_el = tr_element.find_element_by_css_selector('span.ucgMainOmsSpan')
+        additioanal_name = tr_element.find_element_by_css_selector('span.ucgMainGrowerSpan')
         color_el = tr_element.find_element_by_css_selector('td.colColor.colCol.enableHighlight')
         s1_s2_el = tr_element.find_element_by_css_selector('p.enableTooltip')
         i_el = tr_element.find_element_by_css_selector('td.colS4.colS4.enableHighlight')
@@ -84,7 +84,8 @@ def parsing_data():
                         str=str_el.text,
                         buckets=' '.join([buckets_el_splited[0].text, buckets_el_splited[1].text]),
                         things=things_el_splited[0].text,
-                        eur=float(things_el_splited[1].text))
+                        eur=float(things_el_splited[1].text),
+                        additional_name=additioanal_name.text)
         flower.save_info()
 
 
@@ -97,6 +98,7 @@ def create_head_csv():
                             'Наличие',
                             'Упак',
                             'Наименование',
+                            'Наим.(доп.)',
                             'Цвет',
                             'S1',
                             'S2',
@@ -115,7 +117,7 @@ def create_csv_file():
 
 
 class Flower:
-    def __init__(self, photo, availability, pack, name, color, s1_s2, i, q, pb, str, buckets, things, eur):
+    def __init__(self, photo, availability, pack, name, color, s1_s2, i, q, pb, str, buckets, things, eur, additional_name):
         self.availability = availability
         self.photo = photo
         self.pack = pack
@@ -129,15 +131,16 @@ class Flower:
         self.buckets = buckets
         self.things = things
         self.eur = eur
+        self.additional_name = additional_name
 
     def save_info(self):
         if ' ' in self.s1_s2:
             s1 = self.s1_s2.split(' ')[0]
             s2 = self.s1_s2.split(' ')[1]
-            data = [self.photo, self.availability, self.pack, self.name, self.color, s1, s2, self.i, self.q,
+            data = [self.photo, self.availability, self.pack, self.name, self.additional_name, self.color, s1, s2, self.i, self.q,
                     self.pb, self.str, self.buckets, self.things.split(' ')[0], self.eur]
         else:
-            data = [self.photo, self.availability, self.pack, self.name, self.color, self.s1_s2, '', self.i, self.q,
+            data = [self.photo, self.availability, self.pack, self.name, self.additional_name, self.color, self.s1_s2, '', self.i, self.q,
                     self.pb, self.str, self.buckets, self.things, self.eur]
         print(data)
         with open(DATA_FILE_NAME, "a", newline="") as file:
