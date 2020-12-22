@@ -142,8 +142,11 @@ class Flower:
         else:
             data = [self.photo, self.availability, self.pack, self.name, self.additional_name, self.color, self.s1_s2, '', self.i, self.q,
                     self.pb, self.str, self.buckets, self.things, self.eur]
-        print(data)
-        with open(DATA_FILE_NAME, "a", newline="") as file:
+        try:
+            print(data)
+        except UnicodeEncodeError:
+            pass
+        with open(DATA_FILE_NAME, "a", newline="", encoding='utf-8') as file:
             writer = csv.writer(file, delimiter=';')
             writer.writerows([data])
 
